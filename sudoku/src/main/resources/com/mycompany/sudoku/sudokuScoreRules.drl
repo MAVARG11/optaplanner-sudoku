@@ -1,0 +1,52 @@
+package com.mycompany.sudoku;
+    dialect "java"
+
+import org.optaplanner.core.api.score.buildin.simple.SimpleScoreHolder;
+
+import com.mycompany.sudoku.domain.BoardCell;
+
+global SimpleScoreHolder scoreHolder;
+
+// ############################################################################
+// Hard constraints
+// ############################################################################
+/*
+rule "haveToBeChanged"
+salience 1
+    when
+        $d1 : BoardCell(getCellNumberValue() == 0)
+    then
+        scoreHolder.addConstraintMatch(kcontext, -1);
+end
+*/
+
+rule "multipleDigitsHorizontal"
+salience 2
+    when
+        $d1 : BoardCell($id : id, $i : getRowIndex(), $value : getCellNumberValue())
+        $d2 : BoardCell(id > $id, getRowIndex() == $i, getCellNumberValue() == $value)
+    then
+        scoreHolder.addConstraintMatch(kcontext, -1);
+end
+
+rule "multipleDigitsVertical"
+salience 2
+    when
+        $d1 : BoardCell($id : id, $i : getColIndex(), $value : getCellNumberValue())
+        $d2 : BoardCell(id > $id, getColIndex() == $i, getCellNumberValue() == $value)
+    then
+        scoreHolder.addConstraintMatch(kcontext, -1);
+end
+
+rule "multipleDigitsBlock"
+salience 2
+    when
+        $d1 : BoardCell($id : id, $i : getRegionIndex(), $value : getCellNumberValue())
+        $d2 : BoardCell(id > $id, getRegionIndex() == $i, getCellNumberValue() == $value)
+    then
+        scoreHolder.addConstraintMatch(kcontext, -1);
+end
+
+// ############################################################################
+// Calculate score
+// ############################################################################

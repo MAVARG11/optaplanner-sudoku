@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<solver>
+  <!-- <environmentMode>FULL_ASSERT</environmentMode> -->
+
+  <!-- Domain model configuration -->
+  <solutionClass>com.mycompany.sudoku.domain.SudokuBoard</solutionClass>
+  <entityClass>com.mycompany.sudoku.domain.BoardCell</entityClass>
+
+  <!-- Score configuration -->
+  <scoreDirectorFactory>
+    <scoreDefinitionType>SIMPLE</scoreDefinitionType>
+    <scoreDrl>com/mycompany/sudoku/sudokuScoreRules.drl</scoreDrl>
+    <initializingScoreTrend>ONLY_DOWN</initializingScoreTrend>
+    <!--<assertionScoreDirectorFactory>-->
+      <!--<easyScoreCalculatorClass>org.optaplanner.examples.cloudbalancing.solver.score.CloudBalancingMapBasedEasyScoreCalculator</easyScoreCalculatorClass>-->
+    <!--</assertionScoreDirectorFactory>-->
+  </scoreDirectorFactory>
+
+  <!-- Optimization algorithms configuration -->
+  <termination>
+    <bestScoreLimit>0</bestScoreLimit>
+  </termination>
+  <constructionHeuristic>
+    <constructionHeuristicType>FIRST_FIT_DECREASING</constructionHeuristicType>
+  </constructionHeuristic>
+  <localSearch>
+     <!--
+    <changeMoveSelector>
+      <selectionOrder>ORIGINAL</selectionOrder>
+    </changeMoveSelector> -->
+    <!-- 
+    <unionMoveSelector>
+      <cacheType>JUST_IN_TIME</cacheType>
+      <selectionOrder>RANDOM</selectionOrder>
+      <changeMoveSelector/>
+      <swapMoveSelector/>
+    </unionMoveSelector>  -->
+    <!-- changeMoveSelector is the generic form of RowChangeMoveFactory: -->
+    <moveListFactory>
+      <moveListFactoryClass>com.mycompany.sudoku.move.SudokuMoveChangeFactory</moveListFactoryClass>
+    </moveListFactory>
+    <acceptor>
+      <!-- entityTabuSize>50</entityTabuSize-->
+      <entityTabuRatio>0.025</entityTabuRatio>
+    </acceptor>
+    <forager>
+      <!-- Real world problems require to use of <acceptedCountLimit> -->
+      <acceptedCountLimit>300</acceptedCountLimit>
+    </forager>
+  </localSearch>
+</solver>
